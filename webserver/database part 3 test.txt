@@ -1,0 +1,72 @@
+CREATE TABLE Drivers 
+   (date of Birth DATE, 
+   name CHAR(30),  
+   license number INTEGER, 
+       PRIMARY KEY(license number))
+
+CREATE TABLE Insurance Policy
+    (policy number INTEGER,
+    cost REAL,
+    maximum coverage REAL,
+        PRIMARY KEY(policy number))
+        
+CREATE TABLE Cars
+    (model CHAR(30),
+    Make CHAR(30),
+    Year INTEGER,
+    VIN INTEGER,
+        PRIMARY KEY(VIN))
+
+CREATE TABLE Covered By
+    (license number INTEGER,
+    policy number INTEGER,
+    since DATE,
+    PRIMARY KEY(license number, policy number),
+    FOREIGN KEY (license number) REFERENCES Drivers 
+	ON DELETE CASCADE 
+	ON UPDATE CASCADE,
+    FOREIGN KEY (policy number) REFERENCES Insurance Policy
+	ON DELETE NO ACTION
+	ON UPDATE CASCADE)
+
+       P.S. Drivers have participation constraints in Covered By and not capture in SQL
+
+CREATE TABLE Owns
+    (license number INTEGER,
+    VIN INTEGER,
+    PRIMARY KEY(license number, VIN),
+    FOREIGN KEY (license number) REFERENCES Drivers
+	ON DELETE NO ACTION
+	ON UPDATE CASCADE
+    FOREIGN KEY (VIN) REFERENCES Cars 
+	ON DELETE CASCADE
+	ON UPDATE CASCADE)
+
+	P.S. Cars have participation constraints in Owns
+
+
+CREATE TABEL TICKET_ISSUED
+    (number INTEGER,
+    date DATE,
+    fine REAL,
+    description CHAR(100),
+    license number INTEGER,
+    PRIMARY KEY (number, license number),
+    FOREIGN KEY (license number)
+        REFERENCES Drivers,
+        ON DELETE CASCADE)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
