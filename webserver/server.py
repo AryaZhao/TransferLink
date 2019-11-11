@@ -233,19 +233,19 @@ def stuni_info():
     #club
     cursor_club = g.conn.execute("SELECT A.club_name FROM Attend A WHERE A.uni = %s", uni)    
     for result in cursor_club:
-        info.append(("Club attent: ", result[0]))  # can also be accessed using result[0]
+        info.append(("Club attended: ", result[0]))  # can also be accessed using result[0]
     cursor_club.close()
     
     #research
     cursor_re = g.conn.execute("SELECT EI.proj_name FROM Experience_In EI WHERE EI.uni = %s", uni)    
     for result in cursor_re:
-        info.append(("Research attent: ", result[0]))  # can also be accessed using result[0]
+        info.append(("Research attended: ", result[0]))  # can also be accessed using result[0]
     cursor_re.close()
     
     #course
     cursor_cour = g.conn.execute("SELECT C.course_name FROM Has_Taken HT, Course_affiliated C WHERE HT.cnumber = C.cnumber AND HT.dept_name = C.dept_name AND HT.uni = %s", uni)
     for result in cursor_cour:
-        info.append(("Courses attent: ", result[0]))  # can also be accessed using result[0]
+        info.append(("Courses attended: ", result[0]))  # can also be accessed using result[0]
     cursor_cour.close()
 
 
@@ -258,9 +258,45 @@ def stuni_info():
     return render_template("studentuni_info.html", **context)
 
 
+#Function3.1 input club name, return students uni and time
+@app.route('/club')
+def club():
+    cursor = g.conn.execute("SELECT DISTINCT A.club_name FROM Attend A")
+    club = []
+    for result in cursor:
+        club.append(result[0])  # can also be accessed using result[0]
+    cursor.close()
+
+    context = dict(data = club)
 
 
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("club.html", **context)
 
+
+@app.route('/clubuni', methods=['POST'])
+def clubuni():
+    
+    print(request.args)
+
+    club = request.form['name']
+    info = []
+
+    cursor = g.conn.execute("SELECT DISTINCT A.uni FROM Attend A WHERE A.club_name = %s", club)    
+    for result in cursor:
+        info.append(("Students attended: ", result[0]))  # can also be accessed using result[0]
+    cursor.close()
+  
+
+    context = dict(data = info)
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("clubuni.html", **context)
 
 @app.route('/login')
 def login():
