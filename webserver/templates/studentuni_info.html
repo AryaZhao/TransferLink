@@ -9,7 +9,7 @@
 
 <body>
   <h1>Hi! Welcome to Columbia University!</h1>
-  <h3>Select a uni of the transferred student who you know from the list below, see what courses, researches, clubs the student is in!!</h3>
+  <h3>Here are the information related to the uni!!</h3>
   <div>{{data}}</div>
 
   <div>
@@ -18,10 +18,9 @@
     {% endfor %}
   </div>
 
+<p><a href="stuni">Go back to the uni page</a></p>
 <p><a href="/">Go back to the index page</a></p>
 
-<form method="POST" action="/stuni_info">
-<p>Which uni you want to know about?: <input type="text" name="name"> <input type="submit" value="find"></p>
 </form>
 
 </body>

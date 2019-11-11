@@ -148,7 +148,7 @@ def index():
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("prevschool.html", **context)
+  return render_template("prevschool_index.html", **context)
 
 #
 # This is an example of a different path.  You can see it at:
@@ -180,7 +180,7 @@ def add():
 
 
 
-
+#Fucntion1
 @app.route('/prevschool', methods=['POST'])
 def prevschool():
     name = request.form['name']
@@ -203,7 +203,7 @@ def prevschool():
     context = dict(data = names)
     return render_template("findstuprof.html", **context)
 
-
+#Function2
 @app.route('/stuni')
 def stuni():
     cursor3 = g.conn.execute("SELECT S.uni FROM Student_Transfer_Advised S")
@@ -221,25 +221,41 @@ def stuni():
   #
     return render_template("studentuni.html", **context)
 
-@app.route('/stuni_info')
+
+@app.route('/stuni_info', methods=['POST'])
 def stuni_info():
     
+    print(request.args)
+
     uni = request.form['name']
-    cursor4 = g.conn.execute("")
-    
     info = []
-    for result in cursor4:
-        info.append(result[0])  # can also be accessed using result[0]
-    cursor4.close()
+
+    #club
+    cursor_club = g.conn.execute("SELECT A.club_name FROM Attend A WHERE A.uni = %s", uni)    
+    for result in cursor_club:
+        info.append(("Club attent: ", result[0]))  # can also be accessed using result[0]
+    cursor_club.close()
+    
+    #research
+    cursor_re = g.conn.execute("SELECT EI.proj_name FROM Experience_In EI WHERE EI.uni = %s", uni)    
+    for result in cursor_re:
+        info.append(("Research attent: ", result[0]))  # can also be accessed using result[0]
+    cursor_re.close()
+    
+    #course
+    cursor_cour = g.conn.execute("SELECT C.course_name FROM Has_Taken HT, Course_affiliated C WHERE HT.cnumber = C.cnumber AND HT.dept_name = C.dept_name AND HT.uni = %s", uni)
+    for result in cursor_cour:
+        info.append(("Courses attent: ", result[0]))  # can also be accessed using result[0]
+    cursor_cour.close()
+
+
 
     context = dict(data = info)
-
-
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-    return render_template("studentuni.html", **context)
+    return render_template("studentuni_info.html", **context)
 
 
 
