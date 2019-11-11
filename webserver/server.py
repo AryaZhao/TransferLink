@@ -41,11 +41,11 @@ engine = create_engine(DATABASEURI)
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 #
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+#engine.execute("""CREATE TABLE IF NOT EXISTS test (
+#  id serial,
+#  name text
+#);""")
+#engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
 
 @app.before_request
@@ -102,16 +102,17 @@ def index():
   """
 
   # DEBUG: this is debugging code to see what request looks like
-  print(request.args)
+  #print(request.args)
 
 
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM test")
+  cursor = g.conn.execute("SELECT sch_name FROM Previous_School")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append(result[0])  # can also be accessed using result[0]
+  #print(names)
   cursor.close()
 
   #
@@ -147,7 +148,7 @@ def index():
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("index.html", **context)
+  return render_template("prevschool.html", **context)
 
 #
 # This is an example of a different path.  You can see it at:
@@ -168,6 +169,81 @@ def add():
   name = request.form['name']
   g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
   return redirect('/')
+
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/prevschool', methods=['POST'])
+def prevschool():
+    name = request.form['name']
+    
+    cursor = g.conn.execute("SELECT S.uni FROM Student_Transfer_Advised S Where S.sch_name = %s", name)
+    names = []
+    for result in cursor:
+        names.append(result[0])  # can also be accessed using result[0]
+    #print(names)
+    cursor.close()
+    
+    cursor2 = g.conn.execute("SELECT F.prof_name FROM Come_From CF, Faculty F Where CF.sch_name = %s AND F.prof_uni = CF.prof_uni", name)
+    #cursor2 = g.conn.execute("SELECT CF.prof_uni FROM Come_From CF Where CF.sch_name = %s", name)
+    for result in cursor2:
+        names.append(result[0])  # can also be accessed using result[0]
+    #print(names)
+    cursor2.close()
+    
+
+    context = dict(data = names)
+    return render_template("findstuprof.html", **context)
+
+
+@app.route('/stuni')
+def stuni():
+    cursor3 = g.conn.execute("SELECT S.uni FROM Student_Transfer_Advised S")
+    uni = []
+    for result in cursor3:
+        uni.append(result[0])  # can also be accessed using result[0]
+    cursor3.close()
+
+    context = dict(data = uni)
+
+
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("studentuni.html", **context)
+
+@app.route('/stuni_info')
+def stuni_info():
+    
+    uni = request.form['name']
+    cursor4 = g.conn.execute("")
+    
+    info = []
+    for result in cursor4:
+        info.append(result[0])  # can also be accessed using result[0]
+    cursor4.close()
+
+    context = dict(data = info)
+
+
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("studentuni.html", **context)
+
+
+
+
 
 
 @app.route('/login')
