@@ -11,17 +11,21 @@
   <h1>TransferLink</h1>
   <p>Select a club name from the list below and see which transfers attended the club before!</p>
 
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
+<form method="POST" action="/clubuni">
+	<select name="name">
+	
+		{% for n in data %}
+    		{<option value="{{n}}">{{n}}</option>}
+    		{% endfor %}
+	
+	</select>
+	<br><br>
+	<input type="submit" value="find">
+	<br><br>
+</form>
 
 <p><a href="/">Go back to the index page</a></p>
 
-<form method="POST" action="/clubuni">
-<p>Type in club name: <input type="text" name="name"> <input type="submit" value="find"></p>
-</form>
 
 </body>
 

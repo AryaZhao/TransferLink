@@ -13,6 +13,7 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
+from datetime import date
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -357,6 +358,26 @@ def research():
   #
     return render_template("research.html", **context)
 
+@app.route('/researchuni', methods=['POST'])
+def researchuni():
+    
+    print(request.args)
+
+    dept = request.form['name']
+    info = []
+
+    cursor = g.conn.execute("SELECT F.prof_name,E.uni FROM Experience_in E, Supervise S, Faculty F WHERE E.proj_name = S.proj_name AND S.proj_name = %s AND F.prof_uni=S.prof_uni", dept)    
+    for result in cursor:
+        info.append(result)  # can also be accessed using result[0]
+    cursor.close()
+  
+
+    context = dict(data = info)
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("researchuni.html", **context)
 
 #Function5 Input department name, output name of professor who advised transfers before and their research fields
 @app.route('/prof')
@@ -397,7 +418,52 @@ def profinfo():
   #
     return render_template("profinfo.html", **context)
 
+#Function6 store new club-uni dataset into Attend table
+@app.route('/attend')
+def attend():
 
+    cursor = g.conn.execute("SELECT S.uni FROM Student_Transfer_Advised S")
+    cursor2 = g.conn.execute("SELECT DISTINCT A.club_name FROM Attend A")
+    stu = []
+    club=[]
+    for result in cursor:
+        stu.append(result[0])  # can also be accessed using result[0]
+    cursor.close()
+
+    for result in cursor2:
+        club.append(result[0])  # can also be accessed using result[0]
+    cursor2.close()
+
+    context = dict(data1=stu,data2=club)
+
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("attend.html", **context)
+
+@app.route('/insert', methods=['POST'])
+def insert():
+    
+    print(request.args)
+
+    uni = request.form['uni']
+    club = request.form['club']
+
+    #today = date.today()
+    engine.execute("INSERT INTO Attend(uni) VALUES (%s)",uni)
+    engine.execute("INSERT INTO Attend(club_name) VALUES (%s)",club)
+
+    
+    context = dict(data=[1,2,3])
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("insert.html", **context)
+
+
+    
 @app.route('/login')
 def login():
     abort(401)

@@ -11,15 +11,19 @@
   <h1>TransferLink</h1>
   <p>Select a school from the list below where you came from, find student and professor who came from the same school!</p>
 
-<div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
 
 <form method="POST" action="/prevschool">
 <p>Which school above do you come from: </p>
-	<input type="text" name="name"> <input type="submit" value="find">
+	<select name="name">
+	
+		{% for n in data %}
+    		{<option value="{{n}}">{{n}}</option>}
+    		{% endfor %}
+	
+	</select>
+	<br><br>
+	<input type="submit" value="find">
+	<br><br>
 </form>
 
 
@@ -28,6 +32,8 @@
 <p><a href="course">Go to find course information page</a></p>
 <p><a href="research">Go to find research information page</a></p>
 <p><a href="prof">Go to find professor information page</a></p>
+<p><a href="attend">Go to attend club page</a></p>
+
 </body>
 
 

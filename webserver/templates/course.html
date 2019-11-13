@@ -11,17 +11,22 @@
   <h1>TransferLink</h1>
   <p>Select a department name from the list below and see former transfers who has taken courses in the department and the corresponding course number </p>
 
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
+<form method="POST" action="/courseuni">
+	<select name="name">
+	
+		{% for n in data %}
+    		{<option value="{{n}}">{{n}}</option>}
+    		{% endfor %}
+	
+	</select>
+	<br><br>
+	<input type="submit" value="find">
+	<br><br>
+</form>
+
 
 <p><a href="/">Go back to the index page</a></p>
 
-<form method="POST" action="/courseuni">
-<p>Type in department name: <input type="text" name="name"> <input type="submit" value="find"></p>
-</form>
 
 </body>
 
