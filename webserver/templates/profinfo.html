@@ -1,0 +1,35 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h1>TransferLink</h1>
+  <p>the name of professor who advised or supervised transfers before and their research fields</p>
+
+<table style="width:50%">
+	<tr>
+ 		<th>Professor name</th>
+		<th>Research Field</th>
+	</tr>
+	{% for n in data %}
+	<tr>
+    			<td>{{n[0]}}</td>
+			<td>{{n[1]}}</td>
+    			
+	</tr>
+	{% endfor %}
+</table>
+<p><a href="prof">Go back to the professor page</a></p>
+<p><a href="/">Go back to the index page</a></p>
+
+</form>
+
+</body>
+
+
+</html>

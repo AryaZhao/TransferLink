@@ -339,6 +339,64 @@ def courseuni():
   #
     return render_template("courseuni.html", **context)
 
+#Function4 Input research name, output supervisor uni and student uni
+@app.route('/research')
+def research():
+    cursor = g.conn.execute("SELECT DISTINCT E.proj_name FROM Experience_in E")
+    research = []
+    for result in cursor:
+        research.append(result[0])  # can also be accessed using result[0]
+    cursor.close()
+
+    context = dict(data = research)
+
+
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("research.html", **context)
+
+
+#Function5 Input department name, output name of professor who advised transfers before and their research fields
+@app.route('/prof')
+def prof():
+    cursor = g.conn.execute("SELECT DISTINCT W.dept_name FROM Work_in W")
+    prof = []
+    for result in cursor:
+        prof.append(result[0])  # can also be accessed using result[0]
+    cursor.close()
+
+    context = dict(data = prof)
+
+
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("prof.html", **context)
+
+@app.route('/profinfo', methods=['POST'])
+def profinfo():
+    
+    print(request.args)
+
+    dept = request.form['name']
+    info = []
+
+    cursor = g.conn.execute("SELECT F.prof_name, F.research_field FROM Faculty F, Work_in W WHERE W.dept_name = %s AND F.prof_uni=W.prof_uni", dept)    
+    for result in cursor:
+        info.append(result)  # can also be accessed using result[0]
+    cursor.close()
+  
+
+    context = dict(data = info)
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("profinfo.html", **context)
+
 
 @app.route('/login')
 def login():
