@@ -449,10 +449,13 @@ def insert():
 
     uni = request.form['uni']
     club = request.form['club']
+    print(uni,club)
 
-    #today = date.today()
-    engine.execute("INSERT INTO Attend(uni) VALUES (%s)",uni)
-    engine.execute("INSERT INTO Attend(club_name) VALUES (%s)",club)
+    today = date.today()
+    engine.execute("INSERT INTO Attend (uni, club_name, start_time) VALUES (%s,%s,%s)",uni,club,today)
+    #engine.execute("INSERT INTO Attend (uni) VALUES (%s)",uni)
+    #engine.execute("INSERT INTO Attend (club_name) VALUES (%s)",club)
+    #engine.execute("INSERT INTO Attend (start_time) VALUES (%s)",today)
 
     
     context = dict(data=[1,2,3])
