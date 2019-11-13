@@ -1,0 +1,29 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h1>TransferLink</h1>
+  <p>Select a department name from the list below and see former transfers who has taken courses in the department and the corresponding course number </p>
+
+  <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div>
+
+<p><a href="/">Go back to the index page</a></p>
+
+<form method="POST" action="/courseuni">
+<p>Type in department name: <input type="text" name="name"> <input type="submit" value="find"></p>
+</form>
+
+</body>
+
+
+</html>

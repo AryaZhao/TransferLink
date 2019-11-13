@@ -8,24 +8,24 @@
 
 
 <body>
-  <h1>Hi! Welcome to Columbia University!</h1>
-  <h3>Select a school from the list below where you came from, find student and professor who came from the same school!</h3>
-  <div>{{data}}</div>
+  <h1>TransferLink</h1>
+  <p>Select a school from the list below where you came from, find student and professor who came from the same school!</p>
 
-  <div>
+<div>
     {% for n in data %}
     <div>{{n}}</div>
     {% endfor %}
   </div>
 
-<p><a href="stuni">Go to find student information page</a></p>
-<p><a href="club">Go to find club information page</a></p>
-
-
 <form method="POST" action="/prevschool">
-<p>Which school above do you come from: <input type="text" name="name"> <input type="submit" value="find"></p>
+<p>Which school above do you come from: </p>
+	<input type="text" name="name"> <input type="submit" value="find">
 </form>
 
+
+<p><a href="stuni">Go to find student information page</a></p>
+<p><a href="club">Go to find club information page</a></p>
+<p><a href="course">Go to find department information page</a></p>
 </body>
 
 

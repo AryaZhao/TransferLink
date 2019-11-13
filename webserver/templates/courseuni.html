@@ -9,15 +9,16 @@
 
 <body>
   <h1>TransferLink</h1>
-  <p>Here are the information related to the uni!!</p>
+  <p>Get the course number and uni of former transfers who has taken courses from the department before</p>
+
 
   <div>
     {% for n in data %}
-    <div>{{n}}</div>
+    <div>{{n[0]}}  {{n[1]}}</div>
     {% endfor %}
   </div>
 
-<p><a href="stuni">Go back to the uni page</a></p>
+<p><a href="course">Go back to the course page</a></p>
 <p><a href="/">Go back to the index page</a></p>
 
 </form>

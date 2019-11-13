@@ -287,7 +287,7 @@ def clubuni():
 
     cursor = g.conn.execute("SELECT DISTINCT A.uni FROM Attend A WHERE A.club_name = %s", club)    
     for result in cursor:
-        info.append(("Students attended: ", result[0]))  # can also be accessed using result[0]
+        info.append(result[0])  # can also be accessed using result[0]
     cursor.close()
   
 
@@ -297,6 +297,48 @@ def clubuni():
   # for example, the below file reads template/index.html
   #
     return render_template("clubuni.html", **context)
+
+
+#Function3.2 input department name, return student uni and course number
+@app.route('/course')
+def course():
+    cursor = g.conn.execute("SELECT DISTINCT T.dept_name FROM Has_Taken T")
+    dept = []
+    for result in cursor:
+        dept.append(result[0])  # can also be accessed using result[0]
+    cursor.close()
+
+    context = dict(data = dept)
+
+
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("course.html", **context)
+
+
+@app.route('/courseuni', methods=['POST'])
+def courseuni():
+    
+    print(request.args)
+
+    dept = request.form['name']
+    info = []
+
+    cursor = g.conn.execute("SELECT T.cnumber, T.uni FROM Has_Taken T WHERE T.dept_name = %s", dept)    
+    for result in cursor:
+        info.append(result)  # can also be accessed using result[0]
+    cursor.close()
+  
+
+    context = dict(data = info)
+  #
+  # render_template looks in the templates/ folder for files.
+  # for example, the below file reads template/index.html
+  #
+    return render_template("courseuni.html", **context)
+
 
 @app.route('/login')
 def login():
