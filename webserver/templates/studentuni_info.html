@@ -10,13 +10,29 @@
 <body>
   <h1>TransferLink</h1>
   <p>Here are the information related to the uni!!</p>
-  <p><I>Please notice that not all students in the system have listed course or research or club</I></p>
+  <p><I><b>Please notice that not all students in the system have registered courses or involved in researches or attended clubs</I></b></p>
 
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
+<div style="border: 1px solid black">
+	<p>Club Attended:</p><br>
+	{% for n in data1 %}
+        <div>{{n}}</div>
+        {% endfor %}
+</div>
+<br>
+<div style="border: 1px solid black">
+	<p>Research Involved:</p><br>
+	{% for n in data2 %}
+        <div>{{n}}</div>
+        {% endfor %}
+</div>
+<br>
+<div style="border: 1px solid black">
+	<p>Courses Taken:</p><br>
+	{% for n in data3 %}
+        <div>{{n}}</div>
+        {% endfor %}
+</div>
+<br>
 
 <p><a href="stuni">Go back to the uni page</a></p>
 <p><a href="/">Go back to the index page</a></p>

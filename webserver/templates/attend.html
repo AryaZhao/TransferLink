@@ -12,6 +12,7 @@
   <p>Select existing student uni and club name to attend new club</p>
 
 <form method="POST" action="/insert">
+	<h6>Select your uni:</h6>
 	<select name="uni">
 	
 		{% for n in data1 %}
@@ -20,6 +21,7 @@
 	
 	</select>
 	<br>
+	<h6>Select club name:</h6>
 	<select name="club">
 	
 		{% for n in data2 %}

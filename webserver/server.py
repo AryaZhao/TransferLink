@@ -226,32 +226,32 @@ def stuni():
 @app.route('/stuni_info', methods=['POST'])
 def stuni_info():
     
-    print(request.args)
-
     uni = request.form['name']
-    info = []
 
     #club
-    cursor_club = g.conn.execute("SELECT A.club_name FROM Attend A WHERE A.uni = %s", uni)    
+    cursor_club = g.conn.execute("SELECT A.club_name FROM Attend A WHERE A.uni = %s", uni)
+    club=[]
     for result in cursor_club:
-        info.append(("Club attended: ", result[0]))  # can also be accessed using result[0]
+        club.append(result[0])  # can also be accessed using result[0]
     cursor_club.close()
     
     #research
-    cursor_re = g.conn.execute("SELECT EI.proj_name FROM Experience_In EI WHERE EI.uni = %s", uni)    
+    cursor_re = g.conn.execute("SELECT EI.proj_name FROM Experience_In EI WHERE EI.uni = %s", uni)
+    research=[]
     for result in cursor_re:
-        info.append(("Research attended: ", result[0]))  # can also be accessed using result[0]
+        research.append(result[0])  # can also be accessed using result[0]
     cursor_re.close()
     
     #course
     cursor_cour = g.conn.execute("SELECT C.course_name FROM Has_Taken HT, Course_affiliated C WHERE HT.cnumber = C.cnumber AND HT.dept_name = C.dept_name AND HT.uni = %s", uni)
+    course=[]
     for result in cursor_cour:
-        info.append(("Courses attended: ", result[0]))  # can also be accessed using result[0]
+        course.append(result[0])  # can also be accessed using result[0]
     cursor_cour.close()
 
 
 
-    context = dict(data = info)
+    context = dict(data1=club,data2=research,data3=course)
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
@@ -281,7 +281,6 @@ def club():
 @app.route('/clubuni', methods=['POST'])
 def clubuni():
     
-    print(request.args)
 
     club = request.form['name']
     info = []
@@ -322,7 +321,6 @@ def course():
 @app.route('/courseuni', methods=['POST'])
 def courseuni():
     
-    print(request.args)
 
     dept = request.form['name']
     info = []
@@ -360,8 +358,7 @@ def research():
 
 @app.route('/researchuni', methods=['POST'])
 def researchuni():
-    
-    print(request.args)
+  
 
     dept = request.form['name']
     info = []
@@ -399,8 +396,6 @@ def prof():
 
 @app.route('/profinfo', methods=['POST'])
 def profinfo():
-    
-    print(request.args)
 
     dept = request.form['name']
     info = []
@@ -444,21 +439,22 @@ def attend():
 
 @app.route('/insert', methods=['POST'])
 def insert():
-    
-    print(request.args)
-
+  
     uni = request.form['uni']
     club = request.form['club']
-    print(uni,club)
+    inserted=0
+    cursor = g.conn.execute("SELECT A.club_name FROM Attend A WHERE A.uni=%s",uni)
+    clubs=[]
+    for result in cursor:
+        clubs.append(result[0])  # can also be accessed using result[0]
+    cursor.close()
 
-    today = date.today()
-    engine.execute("INSERT INTO Attend (uni, club_name, start_time) VALUES (%s,%s,%s)",uni,club,today)
-    #engine.execute("INSERT INTO Attend (uni) VALUES (%s)",uni)
-    #engine.execute("INSERT INTO Attend (club_name) VALUES (%s)",club)
-    #engine.execute("INSERT INTO Attend (start_time) VALUES (%s)",today)
-
+    if club not in clubs:
+        today = date.today()
+        engine.execute("INSERT INTO Attend (uni, club_name, start_time) VALUES (%s,%s,%s)",uni,club,today)
+        inserted=1
     
-    context = dict(data=[1,2,3])
+    context = dict(data=[inserted,inserted])
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html

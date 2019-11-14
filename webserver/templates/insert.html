@@ -9,7 +9,12 @@
 
 <body>
   <h1>TransferLink</h1>
-  <p>Success!</p>
+		{% if 0 in data %}
+    		<p>Oops. Looks like you are already in the club before, no need to register twice!</p>
+		{% else %}
+    		<p>Success</p>
+    		{% endif %}
+
 
 
 
