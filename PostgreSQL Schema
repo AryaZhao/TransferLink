@@ -1,0 +1,145 @@
+Final SQL Schema for creating table in PostgreSQL
+
+CREATE TABLE Previous_School(
+    state CHAR(30),
+    sch_name CHAR(50),
+    country CHAR (30),
+    PRIMARY KEY (sch_name)
+);
+
+CREATE TABLE Club(
+    club_name CHAR(50),
+    PRIMARY KEY (club_name)
+);
+
+CREATE TABLE Faculty(
+    prof_uni CHAR(10),
+    prof_name CHAR(50) NOT NULL,
+    research_field CHAR(50),
+    PRIMARY KEY (prof_uni)
+);
+
+CREATE TABLE Department(
+    dept_name CHAR(50),
+    PRIMARY KEY (dept_name)
+);
+
+CREATE TABLE Course_affiliated(
+    cnumber INTEGER,
+    course_name CHAR(50),
+    dept_name CHAR (50),
+    PRIMARY KEY (cnumber, dept_name),
+    FOREIGN KEY (dept_name) REFERENCES Department
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE Research(
+    proj_name CHAR (50),
+    field CHAR(50),
+    PRIMARY KEY (proj_name)
+);
+
+
+CREATE TABLE Student_Transfer_Advised(
+    uni CHAR(10),
+    class_year INTEGER NOT NULL,
+    major CHAR(30) NOT NULL,
+    since DATE,
+    sch_name CHAR(50) NOT NULL,
+    prof_uni CHAR(10) NOT NULL,
+    PRIMARY KEY(UNI),
+    FOREIGN KEY (sch_name) REFERENCES Previous_School,
+    FOREIGN KEY (prof_uni) REFERENCES Faculty
+);
+*P.S. We only want to include in the previous school entity set the schools from which students transferred, otherwise the entity set will be too big. This participation constraint of previous school entity is not captured by the SQL schema
+
+
+CREATE TABLE Come_From(
+    graduation_year INTEGER,
+    sch_name CHAR(50),
+    prof_uni CHAR(10),
+    PRIMARY KEY(sch_name, prof_uni),
+    FOREIGN KEY (sch_name) REFERENCES Previous_School,
+    FOREIGN KEY (prof_uni) REFERENCES Faculty
+);
+
+CREATE TABLE Experience_In(
+    start_time date,
+    end_time date,
+    CHECK (end_time > start_time),   
+    uni CHAR(10),
+    proj_name CHAR(50),
+    PRIMARY KEY(uni, proj_name),
+    FOREIGN KEY (uni) REFERENCES Student_Transfer_Advised,
+    FOREIGN KEY (proj_name) REFERENCES Research
+);
+
+CREATE TABLE Attend(
+    start_time date,
+    end_time date,
+    CHECK (end_time > start_time),   
+    uni CHAR(10),
+    club_name CHAR(50),
+    PRIMARY KEY (club_name, uni),
+    FOREIGN KEY (uni) REFERENCES Student_Transfer_Advised,
+    FOREIGN KEY (club_name) REFERENCES Club
+);
+*P.S. A club needs at least one student to operate. The participation constraint of club entity is not captured by the SQL schema
+
+
+CREATE TABLE Teach(
+    prof_uni CHAR(10),
+    cnumber INTEGER,
+    dept_name CHAR(50),
+    PRIMARY KEY(prof_uni, cnumber, dept_name),
+    FOREIGN KEY (prof_uni) REFERENCES Faculty,
+    FOREIGN KEY (cnumber, dept_name) REFERENCES Course_affiliated
+); 
+*P.S. A course needs to be taught by at least one faculty as instructor. The participation constraint of course is not captured by the SQL schema
+
+
+CREATE TABLE Has_Taken(
+    Term CHAR(10),
+    Uni CHAR(10),
+    cnumber INTEGER,
+    dept_name CHAR(50),   
+    PRIMARY KEY(uni, cnumber, dept_name),
+    FOREIGN KEY (uni) REFERENCES Student_Transfer_Advised,
+    FOREIGN KEY (cnumber, dept_name) REFERENCES Course_affiliated
+); 
+*P.S. A course need at least one student, but a newly transferred student may have not taken any class at columbia. This participation constraint of Course Entity set is not captured by the SQL schema
+
+CREATE TABLE Supervise(
+    prof_uni CHAR(10),
+    proj_name CHAR(50),
+    PRIMARY KEY(prof_uni, proj_name),
+    FOREIGN KEY (prof_uni) REFERENCES Faculty,
+    FOREIGN KEY (proj_name) REFERENCES Research
+); 
+*P.S. A research project should be supervised by at least one faculty. This participation constraint of Course and Student Entity set  is not captured by the SQL schema
+
+
+CREATE TABLE Work_In(
+    since DATE,
+    prof_uni CHAR(10),
+    dept_name CHAR(50),
+    PRIMARY KEY(prof_uni, dept_name),
+    FOREIGN KEY (prof_uni) REFERENCES Faculty,
+    FOREIGN KEY (dept_name) REFERENCES Department
+); 
+*P.S. A faculty need to work in at least one department and a department need at least one employee. This participation constraint of Faculty and Department Entity set  is not captured by the SQL schema
+
+CREATE TABLE Sponsor(
+    dept_name CHAR(50),
+    proj_name CHAR(50),
+    PRIMARY KEY(dept_name, proj_name),
+    FOREIGN KEY (proj_name) REFERENCES Research,
+    FOREIGN KEY (dept_name) REFERENCES Department
+);
+
+*P.S. A research project should be sponsored or belong to one department. This participation constraint of Research Entity set  is not captured by the SQL schema
+
+
+
+CONSTRAINT TimeVaild CHECK (to > since)
